@@ -1,10 +1,10 @@
 
 -forked from : https://github.com/middlewares/debugbar
+
 -forked from : https://github.com/php-middleware/phpdebugbar
 
 # middlewares/debugbar
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
 ![Testing][ico-ga]
 [![Total Downloads][ico-downloads]][link-downloads]
@@ -13,49 +13,45 @@ Middleware to insert [PHP DebugBar](http://phpdebugbar.com) automatically in htm
 
 ## Requirements
 
-* PHP >= 7.2
-* A [PSR-7 http library](https://github.com/middlewares/awesome-psr15-middlewares#psr-7-implementations)
-* A [PSR-15 middleware dispatcher](https://github.com/middlewares/awesome-psr15-middlewares#dispatcher)
+* PHP >= 7.4
 
 ## Installation
 
-This package is installable and autoloadable via Composer as [middlewares/debugbar](https://packagist.org/packages/middlewares/debugbar).
-
-```sh
-composer require middlewares/debugbar
-```
+Tbd
 
 ## Example
 
-```php
-$dispatcher = new Dispatcher([
-	new Middlewares\Debugbar()
-]);
-
-$response = $dispatcher->dispatch(new ServerRequest());
-```
-
-## Usage
-
-You can provide a `DebugBar\DebugBar` instance to the constructor or an instance of `DebugBar\StandardDebugBar` will be created automatically. Optionally, you can provide a `Psr\Http\Message\ResponseFactoryInterface` and `Psr\Http\Message\StreamFactoryInterface` to create the new responses. If it's not defined, [Middleware\Utils\Factory](https://github.com/middlewares/utils#factory) will be used to detect it automatically.
+This package supplies a config provider, which could be added to your config/config.php when using laminas-config-aggregator or mezzio-config-manager. However, because it should only be enabled in development, we recommend creating a "local" configuration file (e.g., config/autoload/php-debugbar.local.php) when you need to enable it, with the following contents:
 
 ```php
-//Create a StandardDebugBar automatically
-$debugbar = new Middlewares\Debugbar();
+use DebugBar\Bridge\DoctrineCollector;
+use DebugBar\Storage\FileStorage;
+use Laminas\ConfigAggregator\ConfigAggregator;
+use Laminas\Stdlib\ArrayUtils;
 
-//Use other Debugbar instance
-$debugbar = new Middlewares\Debugbar($myDebugbar);
-
-//Use other Debugbar instance and PSR-17 factories
-$debugbar = new Middlewares\Debugbar($myDebugbar, $myResponseFactory, $myStreamFactory);
-```
-
-### captureAjax
-
-Use this option to capture ajax requests and send the data in the headers. [More info about AJAX and Stacked data](http://phpdebugbar.com/docs/ajax-and-stack.html#ajax-and-stacked-data). By default it's disabled.
-
-```php
-$debugbar = (new Middlewares\Debugbar())->captureAjax();
+$aggregator = new ConfigAggregator(
+    [
+        Mezzio\DebugBar\ConfigProvider::class,
+    ]
+);
+return ArrayUtils::merge(
+    $aggregator->getMergedConfig(),
+    [
+// here write the default Value to your custom value .as example add doctrine-
+        'debugbar'     => [
+            'disable'    => false,
+            'collectors' => [
+                DoctrineCollector::class,
+            ],
+            'storage'    => FileStorage::class,
+        ],
+        'dependencies' => [
+            'factories' => [
+                DoctrineCollector::class => \Mezzio\DebugBar\DataCollector\DoctrineCollectorFactory::class,
+            ],
+        ],
+    ]
+);
 ```
 
 ### inline
@@ -71,9 +67,6 @@ Use this option to pass  render options to the debugbar as an array. A list of a
 
 An example usage would be to pass a new location for the ``base_url`` so that you can rewrite the location of the files needed to render the debug bar. This can be used with symlinks, .htaccess or routes to the files to ensure the debugbar files are accessible.
 
-```php
-$debugbar = (new Middlewares\Debugbar())->renderOptions(array('base_url' => "/MyProjectsSubDirectory/maximebf/debugbar/"));
-```
 ---
 
 Please see [CHANGELOG](CHANGELOG.md) for more information about recent changes and [CONTRIBUTING](CONTRIBUTING.md) for contributing details.
