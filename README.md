@@ -3,13 +3,13 @@
 
 -forked from : https://github.com/php-middleware/phpdebugbar
 
-# middlewares/debugbar
+# mezzio/debugbar
 
 [![Software License][ico-license]](LICENSE)
 ![Testing][ico-ga]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Middleware to insert [PHP DebugBar](http://phpdebugbar.com) automatically in html responses.
+Middleware to insert [PHP DebugBar](http://phpdebugbar.com) automatically in html responses for Mezzio Framwork.
 
 ## Requirements
 
