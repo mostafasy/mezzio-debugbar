@@ -37,7 +37,7 @@ $aggregator = new ConfigAggregator(
 return ArrayUtils::merge(
     $aggregator->getMergedConfig(),
     [
-// here write the default Value to your custom value .as example add doctrine-
+// here you can overload the default Values .as example add doctrine collector or fileStorge
         'debugbar'     => [
             'disable'    => false,
             'collectors' => [
@@ -58,9 +58,6 @@ return ArrayUtils::merge(
 
 Set true to dump the js/css code inline in the html. This fixes (or mitigate) some issues related with loading the debugbar assets.
 
-```php
-$debugbar = (new Middlewares\Debugbar())->inline();
-```
 ### renderOptions
 
 Use this option to pass  render options to the debugbar as an array. A list of available options can be found at https://github.com/maximebf/php-debugbar/blob/master/src/DebugBar/JavascriptRenderer.php#L132
