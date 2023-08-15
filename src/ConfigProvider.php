@@ -42,7 +42,6 @@ class ConfigProvider
                     'bind_ajax_handler_to_xhr'=> true,
                 ],
                 'storage'             => null,
-                'storge_dir'          => 'data/debugbar'
         ];
     }
 
