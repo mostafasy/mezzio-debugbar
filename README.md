@@ -44,6 +44,7 @@ return ArrayUtils::merge(
                 DoctrineCollector::class,
             ],
             'storage'    => FileStorage::class,
+            'storge_dir' =>'path/to-your-storge-dir'
         ],
         'dependencies' => [
             'factories' => [
