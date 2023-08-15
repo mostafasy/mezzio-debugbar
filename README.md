@@ -54,6 +54,16 @@ return ArrayUtils::merge(
     ]
 );
 ```
+### Disable config
+Sometimes you want to have control when enable or disable PHP Debug Bar:
+- We allow you to disable attaching phpdebugbar using X-Disable-Debug-Bar: true  header, cookie or request attribute. 
+- or you can configure in config:
+```
+'disable'=>true
+```
+### captureAjax conifg
+
+Use this option to capture ajax requests and send the data in the headers. [More info about AJAX and Stacked data](http://phpdebugbar.com/docs/ajax-and-stack.html#ajax-and-stacked-data). By default it's disabled.
 
 ### inline
 
@@ -64,6 +74,14 @@ Set true to dump the js/css code inline in the html. This fixes (or mitigate) so
 Use this option to pass  render options to the debugbar as an array. A list of available options can be found at https://github.com/maximebf/php-debugbar/blob/master/src/DebugBar/JavascriptRenderer.php#L132
 
 An example usage would be to pass a new location for the ``base_url`` so that you can rewrite the location of the files needed to render the debug bar. This can be used with symlinks, .htaccess or routes to the files to ensure the debugbar files are accessible.
+
+### File Storge 
+
+It will collect data as json files under the specified directory (which has to be writable).you can configure as :             
+```
+'storage'    => FileStorage::class,
+'storge_dir' =>'path/to-your-storge-dir'
+```
 
 ---
 
