@@ -14,7 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class DebugBarMiddleware implements MiddlewareInterface
 {
-    public const DISABLE_KEY = 'Disable-Debug-Bar';
+    public const DISABLE_KEY = 'X-Disable-Debug-Bar';
 
     private static array $mimes = [
         'css' => 'text/css',
@@ -189,6 +189,8 @@ class DebugBarMiddleware implements MiddlewareInterface
 
     /**
      * Handle ajax responses In the case you are sending back non-HTML data (eg: JSON)
+     * If you are sending a lot of data through headers, it may cause problems with your browser. 
+     * Instead we use a storage handler and the open handler  to load the data after an ajax request
      */
     private function handleAjaxWithNonHtmlResponse($response): ResponseInterface
     {
@@ -199,7 +201,6 @@ class DebugBarMiddleware implements MiddlewareInterface
             $this->debugBar->getData();
             $headerName = 'phpdebugbar-id';
             $headers = [$headerName => $this->debugBar->getCurrentRequestId()];
-            $this->renderer->render( false );
         }
         foreach ($headers as $name => $value) {
             $response = $response->withHeader($name, $value);
