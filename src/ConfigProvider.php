@@ -2,10 +2,12 @@
 declare(strict_types=1);
 
 namespace Mezzio\DebugBar;
+use DebugBar\Bridge\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DebugBar;
 use DebugBar\Storage\FileStorage;
 use Mezzio\DebugBar\DataCollector\ConfigCollectorFactory;
+use Mezzio\DebugBar\DataCollector\DoctrineCollectorFactory;
 use Mezzio\DebugBar\Storage\FileStorageFactory;
 
 class ConfigProvider
@@ -50,11 +52,10 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
-            'aliases'   => [
-            ],
             'factories' => [
                 DebugBarMiddleware::class    => DebugBarMiddlewareFactory::class,
                 ConfigCollector::class       => ConfigCollectorFactory::class,
+                DoctrineCollector::class     => DoctrineCollectorFactory::class,
                 DebugBar::class              => StandardDebugBarFactory::class,
                 FileStorage::class           => FileStorageFactory::class ,
             ],
