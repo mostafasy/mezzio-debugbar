@@ -1,3 +1,7 @@
+
+-forked from : https://github.com/middlewares/debugbar
+-forked from : https://github.com/php-middleware/phpdebugbar
+
 # middlewares/debugbar
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
