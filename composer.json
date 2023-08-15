@@ -1,5 +1,5 @@
 {
-    "name": "middlewares/debugbar",
+    "name": "mostafasy/mezzio-debugbar",
     "type": "library",
     "description": "Middleware to insert PHP DebugBar automatically in html responses",
     "license": "MIT",
@@ -11,14 +11,13 @@
         "http",
         "debugbar"
     ],
-    "homepage": "https://github.com/middlewares/debugbar",
+    "homepage": "https://github.com/mostafasy/mezzio-debugbar",
     "support": {
-        "issues": "https://github.com/middlewares/debugbar/issues"
+        "issues": "https://github.com/mostafasy/mezzio-debugbar"
     },
     "require": {
-        "php": "^7.2 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "maximebf/debugbar": "^1.13",
-        "middlewares/utils": "^3.0",
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev": {
@@ -31,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Middlewares\\": "src/"
+            "Mezzio\\DebugBar\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Middlewares\\Tests\\": "tests/"
+            "Mezzio\\DebugBar\\Tests\\": "tests/"
         }
     },
     "scripts": {
