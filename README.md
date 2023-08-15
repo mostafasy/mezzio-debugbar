@@ -46,11 +46,6 @@ return ArrayUtils::merge(
             'storage'    => FileStorage::class,
             'storge_dir' =>'path/to-your-storge-dir'
         ],
-        'dependencies' => [
-            'factories' => [
-                DoctrineCollector::class => \Mezzio\DebugBar\DataCollector\DoctrineCollectorFactory::class,
-            ],
-        ],
     ]
 );
 ```
