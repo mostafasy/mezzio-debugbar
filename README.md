@@ -16,9 +16,9 @@ Middleware to insert [PHP DebugBar](http://phpdebugbar.com) automatically in htm
 * PHP >= 7.4
 
 ## Installation
-
-Tbd
-
+```
+composer require --dev mostafasy/mezzio-debugbar 
+```
 ## Example
 
 This package supplies a config provider, which could be added to your config/config.php when using laminas-config-aggregator or mezzio-config-manager. However, because it should only be enabled in development, we recommend creating a "local" configuration file (e.g., config/autoload/php-debugbar.local.php) when you need to enable it, with the following contents:
@@ -89,5 +89,5 @@ The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.
 [ico-ga]: https://github.com/middlewares/debugbar/workflows/testing/badge.svg
 [ico-downloads]: https://img.shields.io/packagist/dt/middlewares/debugbar.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/middlewares/debugbar
-[link-downloads]: https://packagist.org/packages/middlewares/debugbar
+[link-packagist]: https://packagist.org/packages/mostafasy/mezzio-debugbar
+[link-downloads]: https://packagist.org/packages/mostafasy/mezzio-debugbar
