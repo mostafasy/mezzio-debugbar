@@ -123,6 +123,9 @@ class DebugBarMiddleware implements MiddlewareInterface
         if ($renderOptions['bind_ajax_handler_to_xhr'] ?? false) {
             $this->renderer->setBindAjaxHandlerToXHR();
         }
+        if ($this->captureAjax) {
+            $this->renderer->setOpenHandlerUrl(ConfigProvider::OPEN_HANDLER_URL);
+        }
     }
 
     private function disableDebugBar(ServerRequestInterface $request, ResponseInterface $response): bool
@@ -132,8 +135,12 @@ class DebugBarMiddleware implements MiddlewareInterface
         $disableCookieValue    = $request->getCookieParams()[self::DISABLE_KEY] ?? false;
         $disableAttributeValue = $request->getAttribute(self::DISABLE_KEY, '') ?? false;
         $isDownload            = strpos($response->getHeaderLine('Content-Disposition'), 'attachment;') !== false;
+        $isOpenHandlerUrl      = $request->getUri()->getPath() === '/' . ConfigProvider::OPEN_HANDLER_URL;
 
-        if ($disableByConfig || $isDownload || $disableHeaderValue || $disableCookieValue || $disableAttributeValue) {
+        if (
+            $disableByConfig || $isDownload || $disableHeaderValue || $disableCookieValue || $disableAttributeValue
+            || $isOpenHandlerUrl
+        ) {
             return true;
         }
 
@@ -219,7 +226,6 @@ class DebugBarMiddleware implements MiddlewareInterface
         if ($this->debugBar->getStorage() === null) {
             $headers = $this->debugBar->getDataAsHeaders();
         } else {
-            $this->renderer->setOpenHandlerUrl('open.php');
             $this->debugBar->getData();
             $headerName = 'phpdebugbar-id';
             $headers    = [$headerName => $this->debugBar->getCurrentRequestId()];
