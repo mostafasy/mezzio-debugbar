@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Mezzio\DebugBar;
 
@@ -12,24 +13,41 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+use function file_exists;
+use function file_get_contents;
+use function in_array;
+use function ob_get_clean;
+use function ob_start;
+use function pathinfo;
+use function session_status;
+use function stripos;
+use function strlen;
+use function strpos;
+use function strripos;
+use function strtolower;
+use function substr;
+
+use const PATHINFO_EXTENSION;
+use const PHP_SESSION_ACTIVE;
+
 class DebugBarMiddleware implements MiddlewareInterface
 {
     public const DISABLE_KEY = 'X-Disable-Debug-Bar';
 
     private static array $mimes = [
-        'css' => 'text/css',
-        'js' => 'text/javascript',
-        'otf' => 'font/opentype',
-        'eot' => 'application/vnd.ms-fontobject',
-        'svg' => 'image/svg+xml',
-        'ttf' => 'application/font-sfnt',
-        'woff' => 'application/font-woff',
+        'css'   => 'text/css',
+        'js'    => 'text/javascript',
+        'otf'   => 'font/opentype',
+        'eot'   => 'application/vnd.ms-fontobject',
+        'svg'   => 'image/svg+xml',
+        'ttf'   => 'application/font-sfnt',
+        'woff'  => 'application/font-woff',
         'woff2' => 'application/font-woff2',
     ];
 
     private Bar $debugBar;
     private bool $captureAjax = false;
-    private bool $inline = false;
+    private bool $inline      = false;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
     private array $debugBarConfig;
@@ -39,16 +57,16 @@ class DebugBarMiddleware implements MiddlewareInterface
      * Set the debug bar.
      */
     public function __construct(
-        Bar $debugBar ,
+        Bar $debugBar,
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory ,
+        StreamFactoryInterface $streamFactory,
         array $debugBarConfig
     ) {
-        $this->debugBar = $debugBar ;
-        $this->responseFactory = $responseFactory ;
-        $this->streamFactory = $streamFactory ;
-        $this->debugBarConfig = $debugBarConfig ;
-        $this->renderer = $this->debugBar->getJavascriptRenderer();
+        $this->debugBar        = $debugBar;
+        $this->responseFactory = $responseFactory;
+        $this->streamFactory   = $streamFactory;
+        $this->debugBarConfig  = $debugBarConfig;
+        $this->renderer        = $this->debugBar->getJavascriptRenderer();
     }
 
     /**
@@ -64,29 +82,30 @@ class DebugBarMiddleware implements MiddlewareInterface
 
         $response = $handler->handle($request);
 
-        if($this->disableDebugBar($request,$response)){
+        if ($this->disableDebugBar($request, $response)) {
             return $response;
         }
 
-        $isAjax = $this->isAjax( $request );
+        $isAjax = $this->isAjax($request);
 
         //Redirection response
-        if ( $this->isRedirection( $response)) {
+        if ($this->isRedirection($response)) {
             return $this->handleRedirect($response);
         }
 
         //Html response
-        if ( $this->isHtml( $response)) {
+        if ($this->isHtml($response)) {
             return $this->handleHtml($response, $isAjax);
         }
 
         //Ajax response
         if ($isAjax && $this->captureAjax) {
-            return $this->handleAjaxWithNonHtmlResponse( $response );
+            return $this->handleAjaxWithNonHtmlResponse($response);
         }
 
         return $response;
     }
+
     private function setConfigOptions(): void
     {
         $renderOptions = $this->debugBarConfig[ 'javascript_renderer' ] ?? [];
@@ -98,42 +117,44 @@ class DebugBarMiddleware implements MiddlewareInterface
         if ($renderOptions) {
             $this->renderer->setOptions($renderOptions);
         }
-        if( $renderOptions['bind_ajax_handler_to_fetch'] ?? false){
+        if ($renderOptions['bind_ajax_handler_to_fetch'] ?? false) {
             $this->renderer->setBindAjaxHandlerToFetch();
         }
-        if($renderOptions['bind_ajax_handler_to_xhr'] ?? false){
+        if ($renderOptions['bind_ajax_handler_to_xhr'] ?? false) {
             $this->renderer->setBindAjaxHandlerToXHR();
         }
     }
+
     private function disableDebugBar(ServerRequestInterface $request, ResponseInterface $response): bool
     {
-        $disableByConfig=$this->debugBarConfig['disable'] ?? false ;
-        $disableHeaderValue = $request->getHeaderLine(self::DISABLE_KEY) ?? false;
-        $disableCookieValue = $request->getCookieParams()[self::DISABLE_KEY] ?? false;
-        $disableAttributeValue = $request->getAttribute(self::DISABLE_KEY, '')?? false;
-        $isDownload=strpos($response->getHeaderLine('Content-Disposition'), 'attachment;')!== false;
+        $disableByConfig       = $this->debugBarConfig['disable'] ?? false;
+        $disableHeaderValue    = $request->getHeaderLine(self::DISABLE_KEY) ?? false;
+        $disableCookieValue    = $request->getCookieParams()[self::DISABLE_KEY] ?? false;
+        $disableAttributeValue = $request->getAttribute(self::DISABLE_KEY, '') ?? false;
+        $isDownload            = strpos($response->getHeaderLine('Content-Disposition'), 'attachment;') !== false;
 
-        if($disableByConfig||$isDownload||$disableHeaderValue||$disableCookieValue||$disableAttributeValue){
+        if ($disableByConfig || $isDownload || $disableHeaderValue || $disableCookieValue || $disableAttributeValue) {
             return true;
         }
 
         return false;
     }
-    private function getAssetResponse(ServerRequestInterface $request):?ResponseInterface
+
+    private function getAssetResponse(ServerRequestInterface $request): ?ResponseInterface
     {
-        $path = $request->getUri()->getPath();
+        $path    = $request->getUri()->getPath();
         $baseUrl = $this->renderer->getBaseUrl();
 
-        if (strpos($path, $baseUrl)=== 0) {
+        if (strpos($path, $baseUrl) === 0) {
             $file = $this->renderer->getBasePath() . substr($path, strlen($baseUrl));
 
             if (file_exists($file)) {
                 $response = $this->responseFactory->createResponse();
-                $response->getBody()->write( (string) file_get_contents($file));
-                $extension = pathinfo( $file, PATHINFO_EXTENSION );
+                $response->getBody()->write((string) file_get_contents($file));
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
 
                 if (isset(self::$mimes[$extension])) {
-                    return $response->withHeader( 'Content-Type', self::$mimes[$extension]);
+                    return $response->withHeader('Content-Type', self::$mimes[$extension]);
                 }
 
                 return $response;
@@ -141,6 +162,7 @@ class DebugBarMiddleware implements MiddlewareInterface
         }
         return null;
     }
+
     /**
      * Handle redirection responses
      */
@@ -159,7 +181,7 @@ class DebugBarMiddleware implements MiddlewareInterface
     private function handleHtml(ResponseInterface $response, bool $isAjax): ResponseInterface
     {
         $html = (string) $response->getBody();
-        if (!$isAjax) {
+        if (! $isAjax) {
             if ($this->inline) {
                 ob_start();
                 echo "<style>\n";
@@ -176,7 +198,7 @@ class DebugBarMiddleware implements MiddlewareInterface
             $html = self::injectHtml($html, $code, '</head>');
         }
 
-        $html = self::injectHtml($html, $this->renderer->render(!$isAjax), '</body>');
+        $html = self::injectHtml($html, $this->renderer->render(! $isAjax), '</body>');
 
         $body = $this->streamFactory->createStream();
 
@@ -189,18 +211,18 @@ class DebugBarMiddleware implements MiddlewareInterface
 
     /**
      * Handle ajax responses In the case you are sending back non-HTML data (eg: JSON)
-     * If you are sending a lot of data through headers, it may cause problems with your browser. 
+     * If you are sending a lot of data through headers, it may cause problems with your browser.
      * Instead we use a storage handler and the open handler  to load the data after an ajax request
      */
     private function handleAjaxWithNonHtmlResponse($response): ResponseInterface
     {
-        if ( $this->debugBar->getStorage() === null ) {
+        if ($this->debugBar->getStorage() === null) {
             $headers = $this->debugBar->getDataAsHeaders();
         } else {
             $this->renderer->setOpenHandlerUrl('open.php');
             $this->debugBar->getData();
             $headerName = 'phpdebugbar-id';
-            $headers = [$headerName => $this->debugBar->getCurrentRequestId()];
+            $headers    = [$headerName => $this->debugBar->getCurrentRequestId()];
         }
         foreach ($headers as $name => $value) {
             $response = $response->withHeader($name, $value);
@@ -216,24 +238,24 @@ class DebugBarMiddleware implements MiddlewareInterface
         $pos = strripos($html, $before);
 
         if ($pos === false) {
-            return $html.$code;
+            return $html . $code;
         }
 
-        return substr($html, 0, $pos).$code.substr($html, $pos);
+        return substr($html, 0, $pos) . $code . substr($html, $pos);
     }
 
-    private function isHtml( ResponseInterface $response ): bool
+    private function isHtml(ResponseInterface $response): bool
     {
         return stripos($response->getHeaderLine('Content-Type'), 'text/html') === 0;
     }
+
     private function isAjax(ServerRequestInterface $request): bool
     {
-        return strtolower( $request->getHeaderLine('X-Requested-With')) === 'xmlhttprequest';
+        return strtolower($request->getHeaderLine('X-Requested-With')) === 'xmlhttprequest';
     }
 
     private function isRedirection(ResponseInterface $response): bool
     {
-        return in_array( $response->getStatusCode(), [302, 301]);
+        return in_array($response->getStatusCode(), [302, 301]);
     }
-
 }

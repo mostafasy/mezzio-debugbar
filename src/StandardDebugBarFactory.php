@@ -1,10 +1,13 @@
 <?php
-declare (strict_types=1);
+
+declare(strict_types=1);
 
 namespace Mezzio\DebugBar;
 
 use DebugBar\StandardDebugBar;
 use Psr\Container\ContainerInterface;
+
+use function is_string;
 
 class StandardDebugBarFactory
 {
@@ -23,7 +26,7 @@ class StandardDebugBarFactory
 
         $storage = $config['debugbar']['storage'];
 
-        if (is_string( $storage)) {
+        if (is_string($storage)) {
             $debugBar->setStorage(
                 $container->get($storage)
             );
