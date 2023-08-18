@@ -214,7 +214,7 @@ class DebugBarMiddleware implements MiddlewareInterface
      * If you are sending a lot of data through headers, it may cause problems with your browser.
      * Instead we use a storage handler and the open handler  to load the data after an ajax request
      */
-    private function handleAjaxWithNonHtmlResponse($response): ResponseInterface
+    private function handleAjaxWithNonHtmlResponse(ResponseInterface $response): ResponseInterface
     {
         if ($this->debugBar->getStorage() === null) {
             $headers = $this->debugBar->getDataAsHeaders();
