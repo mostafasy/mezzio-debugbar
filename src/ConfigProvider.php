@@ -32,7 +32,7 @@ final class ConfigProvider
         ];
     }
 
-    private function getConfig(): array
+    public function getConfig(): array
     {
         return [
             'disable'             => false,
@@ -54,7 +54,7 @@ final class ConfigProvider
     /**
      * Returns the container dependencies
      */
-    private function getDependencies(): array
+    public function getDependencies(): array
     {
         return [
             'factories' => [
@@ -73,7 +73,7 @@ final class ConfigProvider
     /**
      * @return array[]
      */
-    private function getMiddelewarePipeline(): array
+    public function getMiddelewarePipeline(): array
     {
         return [
             DebugBarMiddleware::class => [
@@ -85,7 +85,7 @@ final class ConfigProvider
         ];
     }
 
-    private function getRoutes(): array
+    public function getRoutes(): array
     {
         return [
             self::OPEN_HANDLER_URL => [
