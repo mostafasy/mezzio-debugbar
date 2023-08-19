@@ -8,9 +8,13 @@ use DebugBar\Bridge\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DebugBar;
 use DebugBar\Storage\FileStorage;
+use DebugBar\Storage\PdoStorage;
 use Mezzio\DebugBar\DataCollector\ConfigCollectorFactory;
 use Mezzio\DebugBar\DataCollector\DoctrineCollectorFactory;
+use Mezzio\DebugBar\Storage\DoctrineStorage;
+use Mezzio\DebugBar\Storage\DoctrineStorageFactory;
 use Mezzio\DebugBar\Storage\FileStorageFactory;
+use Mezzio\DebugBar\Storage\PdoStorgeFactory;
 
 final class ConfigProvider
 {
@@ -60,6 +64,8 @@ final class ConfigProvider
                 DebugBar::class           => StandardDebugBarFactory::class,
                 FileStorage::class        => FileStorageFactory::class,
                 OpenHandler::class        => OpenHandlerFactory::class,
+                DoctrineStorage::class    => DoctrineStorageFactory::class,
+                PdoStorage::class         => PdoStorgeFactory::class,
             ],
         ];
     }
