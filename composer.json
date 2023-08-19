@@ -22,8 +22,7 @@
         "psr/http-server-middleware": "^1.0",
         "psr/container": "^1.0 || ^2.0",
         "psr/http-message": "^1.0",
-        "psr/http-factory": "^1.0",
-        "ext-pdo": "*"
+        "psr/http-factory": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8|^9",
@@ -51,10 +50,5 @@
         "test": "phpunit",
         "coverage": "phpunit --coverage-text",
         "coverage-html": "phpunit --coverage-html=coverage"
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
     }
 }
