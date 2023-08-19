@@ -66,7 +66,6 @@ class DebugBarMiddleware implements MiddlewareInterface
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->debugBarConfig  = $debugBarConfig;
-        $this->renderer        = $this->debugBar->getJavascriptRenderer();
     }
 
     /**
@@ -108,7 +107,8 @@ class DebugBarMiddleware implements MiddlewareInterface
 
     private function setConfigOptions(): void
     {
-        $renderOptions = $this->debugBarConfig[ 'javascript_renderer' ] ?? [];
+        $this->renderer = $this->debugBar->getJavascriptRenderer();
+        $renderOptions  = $this->debugBarConfig[ 'javascript_renderer' ] ?? [];
         // Configure whether capture ajax requests to send the data with headers.
         $this->captureAjax = $this->debugBarConfig[ 'captureAjax' ] ?? false;
         // Configure whether the js/css code should be inserted inline in the html.
