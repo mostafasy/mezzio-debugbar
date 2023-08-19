@@ -70,13 +70,38 @@ Use this option to pass  render options to the debugbar as an array. A list of a
 
 An example usage would be to pass a new location for the ``base_url`` so that you can rewrite the location of the files needed to render the debug bar. This can be used with symlinks, .htaccess or routes to the files to ensure the debugbar files are accessible.
 
-### File Storge 
+### File Storage 
 
 It will collect data as json files under the specified directory (which has to be writable).you can configure as :             
 ```
 'storage'    => FileStorage::class,
 'storge_dir' =>'path/to-your-storge-dir'
 ```
+## pdo Storage 
+It will collect data and saved to database you can configure as :   
+```
+'storage'    => PdoStorage::class,
+'pdo' =>[
+  'dsn'=>'mysql:dbname=testdb;host=127.0.0.1';',
+  'username'=>'dbuser',
+  'password'=>'dbpass',
+],
+```
+please note you have to execute sql schema [pdo-sql-Schema]
+
+
+## Doctrine Storage
+
+It will collect data and saved to database by using Doctine you can configure as :   
+```
+'storage'    => DoctrineStorage::class,
+  'doctrine_storge'=>[
+    // it will save queries into extra table for analysis purpose.by default it is false.
+    'save_sql_queries_to_extra_table' => true,
+    ],
+
+```
+you have to execute sql schema: [doctrine-sql-Schema]
 
 ---
 
@@ -91,3 +116,5 @@ The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.
 
 [link-packagist]: https://packagist.org/packages/mostafasy/mezzio-debugbar
 [link-downloads]: https://packagist.org/packages/mostafasy/mezzio-debugbar
+[pdo-sql-Schema]:https://github.com/mostafasy/mezzio-debugbar/blob/master/src/Storage/DatabaseSchemaSql/pdo_storge_sql_schema.sql
+[doctrine-sql-Schema]:https://github.com/mostafasy/mezzio-debugbar/blob/master/src/Storage/DatabaseSchemaSql/doctrine_storge_sql_schema.sql
