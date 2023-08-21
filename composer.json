@@ -52,10 +52,5 @@
         "test": "phpunit",
         "coverage": "phpunit --coverage-text",
         "coverage-html": "phpunit --coverage-html=coverage"
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
     }
 }
