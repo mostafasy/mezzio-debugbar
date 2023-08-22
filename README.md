@@ -40,6 +40,7 @@ return ArrayUtils::merge(
 // here you can overload the default Values .as example add doctrine collector or fileStorage
         'debugbar'     => [
             'disable'    => false,
+            'captureAjax' => true,
             'collectors' => [
                 DoctrineCollector::class,
             ],

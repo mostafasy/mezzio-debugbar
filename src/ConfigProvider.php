@@ -36,7 +36,7 @@ final class ConfigProvider
     {
         return [
             'disable'             => false,
-            'captureAjax'         => true,
+            'captureAjax'         => false,
             'inline'              => false,
             'collectors'          => [
                 ConfigCollector::class,
