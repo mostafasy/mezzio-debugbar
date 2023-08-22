@@ -12,7 +12,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class PdoStorgeFactory
+class PdoStorageFactory
 {
     /**
      * @throws ContainerExceptionInterface

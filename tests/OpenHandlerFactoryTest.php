@@ -23,7 +23,7 @@ class OpenHandlerFactoryTest extends TestCase
     {
         $this->debugbar = $this->createMock(DebugBar::class);
 
-        $this->storage = new MockStorage(['storge' => ['__meta' => ['id' => 'Xstorge']]]);
+        $this->storage = new MockStorage(['storage' => ['__meta' => ['id' => 'Xstorage']]]);
     }
 
     public function testFactoryWillThrowExeceptionIfDebugbarStorogeIsNull(): void

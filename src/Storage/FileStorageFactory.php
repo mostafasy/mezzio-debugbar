@@ -19,10 +19,10 @@ class FileStorageFactory
      */
     public function __invoke(ContainerInterface $container): FileStorage
     {
-        $dirname = $container->get('config')['debugbar' ]['storge_dir'] ?? null;
+        $dirname = $container->get('config')['debugbar' ]['storage_dir'] ?? null;
 
         if ($dirname === null) {
-                throw new DebugBarException("missing config:fileStorage needs storge_dir");
+                throw new DebugBarException("missing config:fileStorage needs storage_dir");
         }
 
         return new FileStorage($dirname);

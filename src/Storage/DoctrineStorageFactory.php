@@ -18,7 +18,7 @@ class DoctrineStorageFactory
     {
         $entityManager = $container->get('doctrine.entity_manager.orm_default');
 
-        $config = $container->get('config')['debugbar' ]['doctrine_storge'] ?? [];
+        $config = $container->get('config')['debugbar' ]['doctrine_storage'] ?? [];
 
         return new DoctrineStorage($entityManager, $config);
     }

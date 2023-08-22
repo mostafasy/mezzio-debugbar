@@ -14,7 +14,7 @@ use Mezzio\DebugBar\DataCollector\DoctrineCollectorFactory;
 use Mezzio\DebugBar\Storage\DoctrineStorage;
 use Mezzio\DebugBar\Storage\DoctrineStorageFactory;
 use Mezzio\DebugBar\Storage\FileStorageFactory;
-use Mezzio\DebugBar\Storage\PdoStorgeFactory;
+use Mezzio\DebugBar\Storage\PdoStorageFactory;
 
 final class ConfigProvider
 {
@@ -65,7 +65,7 @@ final class ConfigProvider
                 FileStorage::class        => FileStorageFactory::class,
                 OpenHandler::class        => OpenHandlerFactory::class,
                 DoctrineStorage::class    => DoctrineStorageFactory::class,
-                PdoStorage::class         => PdoStorgeFactory::class,
+                PdoStorage::class         => PdoStorageFactory::class,
             ],
         ];
     }

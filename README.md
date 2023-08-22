@@ -37,14 +37,14 @@ $aggregator = new ConfigAggregator(
 return ArrayUtils::merge(
     $aggregator->getMergedConfig(),
     [
-// here you can overload the default Values .as example add doctrine collector or fileStorge
+// here you can overload the default Values .as example add doctrine collector or fileStorage
         'debugbar'     => [
             'disable'    => false,
             'collectors' => [
                 DoctrineCollector::class,
             ],
             'storage'    => FileStorage::class,
-            'storge_dir' =>'path/to-your-storge-dir'
+            'storage_dir' =>'path/to-your-storage-dir'
         ],
     ]
 );
@@ -75,7 +75,7 @@ An example usage would be to pass a new location for the ``base_url`` so that yo
 It will collect data as json files under the specified directory (which has to be writable).you can configure as :             
 ```
 'storage'    => FileStorage::class,
-'storge_dir' =>'path/to-your-storge-dir'
+'storage_dir' =>'path/to-your-storage-dir'
 ```
 ## pdo Storage 
 It will collect data and saved to database you can configure as :   
@@ -95,7 +95,7 @@ please note you have to execute sql schema [pdo-sql-Schema]
 It will collect data and saved to database by using Doctine you can configure as :   
 ```
 'storage'    => DoctrineStorage::class,
-  'doctrine_storge'=>[
+  'doctrine_storage'=>[
     // it will save queries into extra table for analysis purpose.by default it is false.
     'save_sql_queries_to_extra_table' => true,
     ],
