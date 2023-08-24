@@ -73,7 +73,7 @@ class DebugBarMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->setConfigOptions();
+        $this->setConfigOptions($request);
         //Asset response
         if ($assetResponse = $this->getAssetResponse($request)) {
             return $assetResponse;
@@ -105,7 +105,7 @@ class DebugBarMiddleware implements MiddlewareInterface
         return $response;
     }
 
-    private function setConfigOptions(): void
+    private function setConfigOptions(ServerRequestInterface $request): void
     {
         $this->renderer = $this->debugBar->getJavascriptRenderer();
         $renderOptions  = $this->debugBarConfig[ 'javascript_renderer' ] ?? [];
@@ -124,7 +124,9 @@ class DebugBarMiddleware implements MiddlewareInterface
             $this->renderer->setBindAjaxHandlerToXHR();
         }
         if ($this->captureAjax) {
-            $this->renderer->setOpenHandlerUrl(ConfigProvider::OPEN_HANDLER_URL);
+            $uri = $request->getUri();
+            $url = $uri->getScheme() . '://' . $uri->getHost() . '/' . ConfigProvider::OPEN_HANDLER_URL;
+            $this->renderer->setOpenHandlerUrl($url);
         }
     }
 
