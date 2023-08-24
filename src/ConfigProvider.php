@@ -80,7 +80,7 @@ final class ConfigProvider
                 'middleware' => [
                     DebugBarMiddleware::class,
                 ],
-                'priority'   => 1000,
+                'priority'   => 20000,
             ],
         ];
     }
