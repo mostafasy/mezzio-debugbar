@@ -11,6 +11,8 @@ use DebugBar\Storage\FileStorage;
 use DebugBar\Storage\PdoStorage;
 use Mezzio\DebugBar\DataCollector\ConfigCollectorFactory;
 use Mezzio\DebugBar\DataCollector\DoctrineCollectorFactory;
+use Mezzio\DebugBar\DataCollector\RouteCollector;
+use Mezzio\DebugBar\DataCollector\RouteCollectorFactory;
 use Mezzio\DebugBar\Storage\DoctrineStorage;
 use Mezzio\DebugBar\Storage\DoctrineStorageFactory;
 use Mezzio\DebugBar\Storage\FileStorageFactory;
@@ -19,6 +21,7 @@ use Mezzio\DebugBar\Storage\PdoStorageFactory;
 final class ConfigProvider
 {
     public const OPEN_HANDLER_URL = 'debugbarOpen';
+
     /**
      * Returns the configuration array
      */
@@ -66,6 +69,7 @@ final class ConfigProvider
                 OpenHandler::class        => OpenHandlerFactory::class,
                 DoctrineStorage::class    => DoctrineStorageFactory::class,
                 PdoStorage::class         => PdoStorageFactory::class,
+                RouteCollector::class     => RouteCollectorFactory::class,
             ],
         ];
     }
