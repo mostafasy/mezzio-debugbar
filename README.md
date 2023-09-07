@@ -106,6 +106,45 @@ you have to execute sql schema: [doctrine-sql-Schema]
 
 ---
 
+## Route Colloctor
+
+It will collect the Route Informations.
+we can add the collectors to config as the following:
+```
+  'collectors' => [
+                RouteCollector::class,
+            ],
+
+```
+Example of Route config:
+
+```
+ 'routes' => [
+        [
+            'path' => '/path/to/match',
+            'middleware' => 'Middleware service or pipeline',
+            'allowed_methods' => ['GET', 'POST', 'PATCH'],
+            'name' => 'route.name',
+            'options' => [
+                'stuff' => 'to',
+                'pass'  => 'to',
+                'the'   => 'underlying router',
+            ],
+        ],
+        'another.route.name' => [
+            'path' => '/another/path/to/match',
+            'middleware' => 'Middleware service or pipeline',
+            'allowed_methods' => ['GET', 'POST'],
+            'options' => [
+                'more'    => 'router',
+                'options' => 'here',
+            ],
+        ],
+    ],
+
+```
+---
+
 Please see [CHANGELOG](CHANGELOG.md) for more information about recent changes and [CONTRIBUTING](CONTRIBUTING.md) for contributing details.
 
 The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.
