@@ -17,7 +17,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "maximebf/debugbar": "1.22.3",
+        "php-debugbar/php-debugbar": "^2.2",
         "laminas/laminas-diactoros": "^2.3 || ^3.6",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
