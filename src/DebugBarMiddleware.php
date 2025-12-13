@@ -6,6 +6,7 @@ namespace Mezzio\DebugBar;
 
 use DebugBar\DebugBar as Bar;
 use DebugBar\JavascriptRenderer;
+use DebugBar\Storage\FileStorage;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -84,7 +85,7 @@ class DebugBarMiddleware implements MiddlewareInterface
         if ($this->disableDebugBar($request, $response)) {
             return $response;
         }
-
+        $this->maybeCleanupStorage();
         $isAjax = $this->isAjax($request);
 
         //Redirection response
@@ -266,4 +267,24 @@ class DebugBarMiddleware implements MiddlewareInterface
     {
         return in_array($response->getStatusCode(), [302, 301]);
     }
+    private function maybeCleanupStorage(): void
+    {
+        $interval = $this->config['debugbar']['storage']['cleanup_interval'] ?? 3600;
+        $storage = $this->debugBar->getStorage();
+
+        if (!$storage instanceof FileStorage) {
+            return;
+        }
+
+        $dir = $storage->getPath();
+        $marker = $dir . '/.last_cleanup';
+
+        $last = is_file($marker) ? filemtime($marker) : 0;
+
+        if (time() - $last >= (int) $interval) {
+            $storage->clear();
+            @touch($marker);
+        }
+    }
+}
 }
