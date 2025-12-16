@@ -270,6 +270,8 @@ class DebugBarMiddleware implements MiddlewareInterface
     private function maybeCleanupStorage(): void
     {
         $interval = $this->config['debugbar']['storage']['cleanup_interval'] ?? 3600;
+        $ttl = $this->config['debugbar']['storage']['ttl'] ?? 3600;
+
         $storage = $this->debugBar->getStorage();
 
         if (!$storage instanceof FileStorage) {
@@ -280,11 +282,17 @@ class DebugBarMiddleware implements MiddlewareInterface
         $marker = $dir . '/.last_cleanup';
 
         $last = is_file($marker) ? filemtime($marker) : 0;
-
-        if (time() - $last >= (int) $interval) {
-            $storage->clear();
-            @touch($marker);
+        
+        if (time() - $last < $interval) {
+        return;
         }
+        
+        foreach (glob($dir . '/*.json') as $file) {
+            if (time() - filemtime($file) > $ttl) {
+                @unlink($file);
+            }
+        }
+        @touch($marker);
     }
 }
-}
+
