@@ -283,13 +283,21 @@ class DebugBarMiddleware implements MiddlewareInterface
 
         $last = is_file($marker) ? filemtime($marker) : 0;
         
-        if (time() - $last < $interval) {
-        return;
+        if (time() - $last < (int)$interval) {
+            return;
         }
+        foreach (new \DirectoryIterator($dir) as $file) {
         
-        foreach (glob($dir . '/*.json') as $file) {
-            if (time() - filemtime($file) > $ttl) {
-                @unlink($file);
+            if ($file->isDot() || !$file->isFile()) {
+                continue;
+            }    
+            
+            if ($file->getExtension() !== 'json') {
+                continue;
+            }
+
+            if (time() - $file->getMTime() > $ttl) {
+                @unlink($file->getPathname());
             }
         }
         @touch($marker);
