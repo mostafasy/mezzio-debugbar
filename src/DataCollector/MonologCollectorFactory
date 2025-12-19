@@ -1,0 +1,49 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Mezzio\DebugBar\DataCollector;
+
+use DebugBar\Bridge\MonologCollector;
+use Monolog\Logger;
+use Psr\Container\ContainerInterface;
+use RuntimeException;
+
+final class MonologCollectorFactory
+{
+    public function __invoke(ContainerInterface $container): MonologCollector
+    {
+        $config = $container->get('config')['debugbar']['monolog_collector'] ?? [];
+
+        $logger = null;
+
+        if (! empty($config['logger_service'])) {
+            if (! $container->has($config['logger_service'])) {
+                throw new RuntimeException(
+                    sprintf('Logger service "%s" not found', $config['logger_service'])
+                );
+            }
+
+            $service = $container->get($config['logger_service']);
+
+            if (! $service instanceof Logger) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Logger service "%s" must be instance of %s or null',
+                        $config['logger_service'],
+                        Logger::class
+                    )
+                );
+            }
+
+            $logger = $service;
+        }
+
+        return new MonologCollector(
+            $logger,
+            $config['level']  ?? Logger::DEBUG,
+            $config['bubble'] ?? true,
+            $config['name']   ?? 'monolog'
+        );
+    }
+}
