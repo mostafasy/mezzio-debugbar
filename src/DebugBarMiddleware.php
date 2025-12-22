@@ -269,38 +269,39 @@ class DebugBarMiddleware implements MiddlewareInterface
     }
     private function maybeCleanupStorage(): void
     {
-        $interval = $this->config['debugbar']['storage']['cleanup_interval'] ?? 3600;
-        $ttl = $this->config['debugbar']['storage']['ttl'] ?? 3600;
-
+        $interval = $this->debugBarConfig[ 'storage_cleanup_interval' ] ?? 900;
+        $ttl = $this->debugBarConfig[ 'storage_ttl' ] ?? 900;
         $storage = $this->debugBar->getStorage();
 
-        if (!$storage instanceof FileStorage) {
+        if ( ! $storage instanceof FileStorage ) {
             return;
         }
+        $dir = $this->debugBarConfig[ 'storage_dir' ] ?? null ;
 
-        $dir = $storage->getPath();
+        if (!$dir || !is_dir($dir) || !is_readable($dir)) {
+            return;
+        }
         $marker = $dir . '/.last_cleanup';
 
-        $last = is_file($marker) ? filemtime($marker) : 0;
-        
-        if (time() - $last < (int)$interval) {
+        $last = is_file( $marker ) ? filemtime( $marker ) : 0;
+
+        if ( time() - $last < (int) $interval ) {
             return;
         }
-        foreach (new \DirectoryIterator($dir) as $file) {
-        
-            if ($file->isDot() || !$file->isFile()) {
-                continue;
-            }    
-            
-            if ($file->getExtension() !== 'json') {
+        foreach ( new \DirectoryIterator( $dir ) as $file ) {
+            if ( $file->isDot() || ! $file->isFile() ) {
                 continue;
             }
 
-            if (time() - $file->getMTime() > $ttl) {
-                @unlink($file->getPathname());
+            if ( $file->getExtension() !== 'json' ) {
+                continue;
+            }
+
+            if ( time() - $file->getMTime() > $ttl ) {
+                @unlink( $file->getPathname() );
             }
         }
-        @touch($marker);
+        @touch( $marker );
     }
 }
 
