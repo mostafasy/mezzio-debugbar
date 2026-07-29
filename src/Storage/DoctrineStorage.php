@@ -41,7 +41,7 @@ class DoctrineStorage extends PdoStorage
      *
      * @throws Exception
      */
-    public function save($id, $data)
+    public function save($id, $data): void
     {
         $sql  = $this->getSqlQuery('save');
         $stmt = $this->entityManager->getConnection()->prepare($sql);
@@ -90,7 +90,7 @@ class DoctrineStorage extends PdoStorage
      *
      * @throws Exception
      */
-    public function get($id)
+    public function get($id): array
     {
         $sql  = $this->getSqlQuery('get');
         $stmt = $this->entityManager->getConnection()->prepare($sql);
@@ -99,7 +99,7 @@ class DoctrineStorage extends PdoStorage
         if (is_string($data[0] ?? null)) {
             return unserialize($data[0]);
         }
-        return null;
+        return [];
     }
 
     /**
@@ -107,7 +107,7 @@ class DoctrineStorage extends PdoStorage
      *
      * @throws Exception
      */
-    public function find(array $filters = [], $max = 20, $offset = 0)
+    public function find(array $filters = [], $max = 20, $offset = 0): array
     {
         $where  = [];
         $params = [];
@@ -144,7 +144,7 @@ class DoctrineStorage extends PdoStorage
      *
      * @throws Exception
      */
-    public function clear()
+    public function clear(): void
     {
         $this->entityManager->getConnection()->executeStatement($this->getSqlQuery('clear'));
     }
