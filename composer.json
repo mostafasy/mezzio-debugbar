@@ -16,7 +16,7 @@
         "issues": "https://github.com/mostafasy/mezzio-debugbar"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.0",
         "php-debugbar/php-debugbar": "^3.0",
         "laminas/laminas-diactoros": "^2.3 || ^3.6",
         "psr/http-server-handler": "^1.0",

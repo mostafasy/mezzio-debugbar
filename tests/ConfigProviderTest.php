@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\DebugBar\Tests;
 
-use DebugBar\Bridge\DoctrineCollector;
+use DebugBar\Bridge\Doctrine\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DebugBar;
 use DebugBar\Storage\FileStorage;

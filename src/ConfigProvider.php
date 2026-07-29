@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\DebugBar;
 
+use DebugBar\Bridge\Doctrine\DebugBarSQLMiddleware;
 use DebugBar\Bridge\Doctrine\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DebugBar;
@@ -70,6 +71,7 @@ final class ConfigProvider
                 DoctrineStorage::class    => DoctrineStorageFactory::class,
                 PdoStorage::class         => PdoStorageFactory::class,
                 RouteCollector::class     => RouteCollectorFactory::class,
+                DebugBarSQLMiddleware::class => DebugBarSQLMiddlewareFactory::class,
             ],
         ];
     }
